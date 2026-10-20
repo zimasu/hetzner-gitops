@@ -1,0 +1,134 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ntfy
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ntfy-cache
+  namespace: ntfy
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ntfy-data
+  namespace: ntfy
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntfy-config
+  namespace: ntfy
+data:
+  server.yml: |
+    base-url: https://ntfy.zidanesyukri.me
+    listen-http: :80
+    cache-file: /var/cache/ntfy/cache.db
+    auth-file: /var/lib/ntfy/auth.db
+    auth-default-access: deny-all
+    behind-proxy: true
+    web-push-public-key: BJSdpiZKw5IiXuhJDY8CTHOtatT7p298IuEuKbxSdolVmemAS5pNhVWKkfd5vtuG6K2RP2tftDtlwxddexhVy8I
+    web-push-private-key: QN5jXRL8jslb8K2Ubct4JeP1xPaB-EdNCibyZhTC-aE
+    web-push-file: /var/lib/ntfy/webpush.db
+    web-push-email-address: zimasu.pro@gmail.com
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ntfy
+  namespace: ntfy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ntfy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ntfy
+    spec:
+      containers:
+        - name: ntfy
+          image: binwiederhier/ntfy:latest
+          args: ["serve"]
+          env:
+            - name: TZ
+              value: Europe/Berlin
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config
+              mountPath: /etc/ntfy
+            - name: cache
+              mountPath: /var/cache/ntfy
+            - name: data
+              mountPath: /var/lib/ntfy
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 50m
+            limits:
+              memory: 256Mi
+              cpu: 200m
+      volumes:
+        - name: config
+          configMap:
+            name: ntfy-config
+        - name: cache
+          persistentVolumeClaim:
+            claimName: ntfy-cache
+        - name: data
+          persistentVolumeClaim:
+            claimName: ntfy-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ntfy
+  namespace: ntfy
+spec:
+  selector:
+    app: ntfy
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ntfy
+  namespace: ntfy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ntfy.zidanesyukri.me
+      secretName: ntfy-tls
+  rules:
+    - host: ntfy.zidanesyukri.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ntfy
+                port:
+                  number: 80

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookstack
+  namespace: bookstack
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - books.zidanesyukri.me
+      secretName: bookstack-tls
+  rules:
+    - host: books.zidanesyukri.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bookstack
+                port:
+                  number: 80
