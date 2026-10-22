@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: gitea
-          image: gitea/gitea:1.22
+          image: gitea/gitea@sha256:f505a0d3a41323b786e05942fc7a4075e07ae7c169fd9485649aa55ee543a21a
           ports:
             - containerPort: 3000
               name: http
