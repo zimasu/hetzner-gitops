@@ -18,15 +18,17 @@ spec:
           image: lscr.io/linuxserver/bookstack:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           envFrom:
             - secretRef:
                 name: bookstack-env
           volumeMounts:
             - mountPath: /var/www/bookstack/public/uploads
               name: uploads
+              subPath: public
             - mountPath: /var/www/bookstack/storage/uploads
               name: uploads
+              subPath: storage
       volumes:
         - name: uploads
           persistentVolumeClaim:
@@ -69,6 +71,11 @@ spec:
                 secretKeyRef:
                   name: bookstack-env
                   key: DB_PASSWORD
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bookstack-env
+                  key: MYSQL_ROOT_PASSWORD
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql-data
