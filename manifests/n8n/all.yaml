@@ -8,7 +8,7 @@ spec:
   accessModes: [ReadWriteOnce]
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /opt/n8n
+    path: /opt/n8n/data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -54,17 +54,15 @@ spec:
               value: https
             - name: WEBHOOK_URL
               value: https://n8n.zidanesyukri.me/
-            - name: N8N_USER_FOLDER
-              value: /home/node/.n8n
             - name: DB_TYPE
               value: sqlite
             - name: GENERIC_TIMEZONE
               value: Asia/Jakarta
           volumeMounts:
-            - name: data
+            - name: n8n-data
               mountPath: /home/node/.n8n
       volumes:
-        - name: data
+        - name: n8n-data
           persistentVolumeClaim:
             claimName: n8n-pvc
 ---
