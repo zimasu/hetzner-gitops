@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: noco
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/zimasu/hetzner-gitops
+    targetRevision: HEAD
+    path: manifests/noco
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: noco
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
