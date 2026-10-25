@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anki
+  namespace: anki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anki
+  template:
+    metadata:
+      labels:
+        app: anki
+    spec:
+      containers:
+        - name: anki
+          image: ghcr.io/ankitects/anki:25.02
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SYNC_USER1
+              valueFrom:
+                secretKeyRef:
+                  name: anki-credentials
+                  key: SYNC_USER1
+          volumeMounts:
+            - name: data
+              mountPath: /anki_data
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: anki-data
