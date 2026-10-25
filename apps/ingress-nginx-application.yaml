@@ -9,6 +9,14 @@ spec:
     repoURL: https://kubernetes.github.io/ingress-nginx
     chart: ingress-nginx
     targetRevision: 4.11.3
+    helm:
+      values: |
+        controller:
+          config:
+            server-snippet: |
+              if ($host !~* "^(anki|ntfy|noco|n8n|gitea|bookstack|openwebui)\.zidanesyukri\.me$") {
+                return 444;
+              }
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
