@@ -17,7 +17,7 @@ spec:
           extraArgs:
             default-backend-service: ingress-nginx/default-backend
         defaultBackend:
-          enabled: true
+          enabled: false
           image:
             repository: nginx
             tag: alpine
