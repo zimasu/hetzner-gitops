@@ -13,10 +13,6 @@ spec:
       values: |
         controller:
           config:
-            custom-http-errors: ""
-          extraArgs:
-            default-server: ""
-          config:
             http-snippet: |
               server {
                 listen 80 default_server;
