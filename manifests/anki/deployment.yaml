@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: anki
-          image: ghcr.io/ankitects/anki:25.02
+          image: ghcr.io/z0rrn/anki-sync-server:latest
           ports:
             - containerPort: 8080
           env:
