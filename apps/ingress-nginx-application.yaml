@@ -13,11 +13,7 @@ spec:
       values: |
         controller:
           config:
-            http-snippet: |
-              server {
-                listen 80 default_server;
-                return 444;
-              }
+            allow-snippet-annotations: "false"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
