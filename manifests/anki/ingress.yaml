@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: anki
+  namespace: anki
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: anki.zidanesyukri.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: anki
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - anki.zidanesyukri.me
+      secretName: anki-tls
