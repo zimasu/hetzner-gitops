@@ -17,7 +17,7 @@ spec:
               service:
                 name: anki
                 port:
-                  number: 8080
+                  number: 27701
   tls:
     - hosts:
         - anki.zidanesyukri.me
