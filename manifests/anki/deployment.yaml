@@ -17,7 +17,7 @@ spec:
         - name: anki
           image: ghcr.io/z0rrn/anki-sync-server:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 27701
           env:
             - name: SYNC_USER1
               valueFrom:

@@ -7,5 +7,5 @@ spec:
   selector:
     app: anki
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 27701
+      targetPort: 27701
