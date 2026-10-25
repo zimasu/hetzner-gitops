@@ -13,8 +13,15 @@ spec:
       values: |
         controller:
           config:
-            default-server-snippet: |
-              return 444;
+            custom-http-errors: ""
+          extraArgs:
+            default-server: ""
+          config:
+            http-snippet: |
+              server {
+                listen 80 default_server;
+                return 444;
+              }
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
