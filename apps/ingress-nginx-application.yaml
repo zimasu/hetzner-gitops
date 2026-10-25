@@ -13,10 +13,8 @@ spec:
       values: |
         controller:
           config:
-            server-snippet: |
-              if ($host !~* "^(anki|ntfy|noco|n8n|gitea|bookstack|openwebui)\.zidanesyukri\.me$") {
-                return 444;
-              }
+            default-server-snippet: |
+              return 444;
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
