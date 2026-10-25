@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-backend-conf
+  namespace: ingress-nginx
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 80;
+        return 444;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-backend
+  namespace: ingress-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default-backend
+  template:
+    metadata:
+      labels:
+        app: default-backend
+    spec:
+      containers:
+      - name: default-backend
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: default-backend-conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-backend
+  namespace: ingress-nginx
+spec:
+  selector:
+    app: default-backend
+  ports:
+  - port: 80
+    targetPort: 80

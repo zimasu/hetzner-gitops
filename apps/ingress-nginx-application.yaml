@@ -14,6 +14,21 @@ spec:
         controller:
           config:
             allow-snippet-annotations: "false"
+          extraArgs:
+            default-backend-service: ingress-nginx/default-backend
+        defaultBackend:
+          enabled: true
+          image:
+            repository: nginx
+            tag: alpine
+          extraVolumes:
+            - name: nginx-conf
+              configMap:
+                name: default-backend-conf
+          extraVolumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
