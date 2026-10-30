@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mkdocs
-          image: ghcr.io/zimasu/docs:be7838a98cafca3830cd74e77e87e81e9048375d
+          image: ghcr.io/zimasu/docs:923ec8b607b7c224227b50da259072d9c5322b78
           imagePullPolicy: Always
           ports:
             - containerPort: 80
