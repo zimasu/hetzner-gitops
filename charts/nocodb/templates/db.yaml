@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: noco-db
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: noco-db
+  template:
+    metadata:
+      labels:
+        app: noco-db
+    spec:
+      containers:
+      - name: noco-db
+        image: postgres:16-alpine
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.db.user }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretName }}
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: {{ .Values.db.user }}
+        volumeMounts:
+        - name: noco-db-data
+          mountPath: /var/lib/postgresql/data
+        readinessProbe:
+          exec:
+            command: ["pg_isready", "-U", "{{ .Values.db.user }}"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: noco-db-data
+        persistentVolumeClaim:
+          claimName: noco-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: noco-db-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: noco-db
+  ports:
+    - port: 5432
+      targetPort: 5432

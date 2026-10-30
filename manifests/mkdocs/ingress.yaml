@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mkdocs
+  namespace: mkdocs
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - docs.zidanesyukri.me
+      secretName: mkdocs-tls
+  rules:
+    - host: docs.zidanesyukri.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mkdocs
+                port:
+                  number: 80

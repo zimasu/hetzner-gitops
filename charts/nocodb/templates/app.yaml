@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nocodb
+  template:
+    metadata:
+      labels:
+        app: nocodb
+    spec:
+      containers:
+      - name: nocodb
+        image: nocodb/nocodb:{{ .Chart.AppVersion }}
+        ports:
+        - containerPort: 8080
+        env:
+        - name: NC_DB
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretName }}
+              key: NC_DB
+        - name: NC_AUTH_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.db.secretName }}
+              key: NC_AUTH_JWT_SECRET
+        - name: NC_PUBLIC_URL
+          value: "https://{{ .Values.domain }}"
+        volumeMounts:
+        - name: noco-data
+          mountPath: /usr/app/data
+      volumes:
+      - name: noco-data
+        persistentVolumeClaim:
+          claimName: noco-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: noco-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: nocodb
+  ports:
+    - port: 8080
+      targetPort: 8080
