@@ -1,7 +1,7 @@
 # hetzner-gitops
 K3s cluster running on Hetzner Cloud and managed with ArgoCD.
-## Problem
-SSH is stateless. Every session starts from scratch.
+## Motivation
+SSH is stateless. Every session starts from scratch, which makes it hard to audit and maintain.
 ## Solution
 This repo is stateful which means it acts as a single source of truth.
 ## Structure
