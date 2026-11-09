@@ -31,3 +31,9 @@ Each file in `apps/` points ArgoCD at a path in `manifests/`.
 - Anki
 - MkDocs
 - BookStack
+
+## How it works
+
+This repo follows the **App of Apps** GitOps pattern.
+ArgoCD watches this repository and automatically syncs 
+any changes to the k3s cluster.
