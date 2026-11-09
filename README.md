@@ -1,10 +1,19 @@
-#Hetzner GitOps
-This is a Kubernetes GitOps setup on Hetzner Cloud with Helm charts, app manifests, and GitHub Actions automation
-##Overview
-I built this because I'm trying to learn GitOps
-##What I built
-What I actually did is I research the stuff and assemble it
-##Obstacle
-I have to create the thing first, then deepen the knowledge
-##Current State
-It's currently running healthy
+# hetzner-gitops
+K3s cluster running on Hetzner Cloud and managed with ArgoCD.
+## Problem
+SSH is stateless. Every session starts from scratch.
+## Solution
+This repo is stateful. Single source of truth.
+## Structure
+App-of-Apps: `root-application.yaml` syncs `apps/`.
+Each file in `apps/` points ArgoCD at a path in `manifests/`.
+
+    apps/       ArgoCD Application manifests
+    manifests/  Kubernetes manifests per service
+    charts/     Custom Helm charts (NocoDB, ARM64)
+
+## Stack
+k3s · ArgoCD · ingress-nginx · cert-manager · Helm · GitHub Actions
+
+## Services
+Gitea · n8n · NocoDB · Open WebUI · ntfy · Anki · MkDocs · BookStack
