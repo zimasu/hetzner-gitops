@@ -13,19 +13,19 @@ Each file in `apps/` points ArgoCD at a path in `manifests/`.
     charts/     Custom Helm charts (NocoDB, ARM64)
 
 ## Stack
-k3s
-ArgoCD
-ingress-nginx
-cert-manager
-Helm
-GitHub Actions
+-k3s
+-ArgoCD
+-ingress-nginx
+-cert-manager
+-Helm
+-GitHub Actions
 
 ## Services
-Gitea
-n8n
-NocoDB
-Open WebUI
-ntfy
-Anki
-MkDocs
-BookStack
+-Gitea
+-n8n
+-NocoDB
+-Open WebUI
+-ntfy
+-Anki
+-MkDocs
+-BookStack
