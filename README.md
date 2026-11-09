@@ -34,6 +34,19 @@ Each file in `apps/` points ArgoCD at a path in `manifests/`.
 
 ## How it works
 
-This repo follows the **App of Apps** GitOps pattern.
-ArgoCD watches this repository and automatically syncs 
-any changes to the k3s cluster.
+This repo follows the **App of Apps** GitOps pattern.  
+`root-application.yaml` registers every app in `apps/` with ArgoCD.  
+ArgoCD continuously polls this repo and syncs any changes to the k3s cluster automatically.
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant GH as GitHub (this repo)
+    participant ACD as ArgoCD
+    participant K3S as k3s Cluster
+
+    Dev->>GH: git push (update manifest)
+    ACD->>GH: poll for changes
+    ACD->>K3S: sync updated manifests
+    K3S-->>ACD: report sync status
+```
