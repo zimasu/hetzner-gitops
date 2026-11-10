@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: root-domain
+  namespace: ingress-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location / {
+        return 200 "OK";
+        add_header Content-Type text/plain;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: zidanesyukri.me
+  - host: www.zidanesyukri.me
