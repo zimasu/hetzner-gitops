@@ -52,11 +52,3 @@ sequenceDiagram
     ACD->>K3S: sync updated manifests
     K3S-->>ACD: report sync status
 ```
-
-## Contributing
-
-Pull requests are welcome. For new services, add a manifest under `manifests/<service>/` and an ArgoCD Application in `apps/<service>.yaml`.
-
-## License
-
-MIT
